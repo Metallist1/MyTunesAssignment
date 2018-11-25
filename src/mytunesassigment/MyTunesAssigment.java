@@ -19,7 +19,7 @@ public class MyTunesAssigment extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/movierecsys/gui/view/FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/mytunesassigment/gui/view/MainWindowView.fxml"));
         
         Scene scene = new Scene(root);
         

@@ -31,9 +31,9 @@ public class SongModel {
     public ObservableList<Song> getSongs() {
         return allSongs;
     }
-    
-    public void createSong(String title,String artist, String category,double playtime,String location) {
-        Song newSong = logiclayer.createSong(title, artist,category,playtime,location);
+
+    public void createSong(String title, String artist, String category, int playtime, String location) {
+        Song newSong = logiclayer.createSong(title, artist, category, playtime, location);
         allSongs.add(newSong);
     }
 
@@ -42,9 +42,9 @@ public class SongModel {
         allSongs.remove(songToDelete);
     }
 
-    public void updateSong(Song songToDelete, String title,String artist, String category,double playtime,String location) {
+    public void updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location) {
         allSongs.remove(songToDelete);
-        Song newSong = logiclayer.updateSong(title, artist,category,playtime,location);
+        Song newSong = logiclayer.updateSong(title, artist, category, playtime, location);
         allSongs.add(newSong);
     }
 }

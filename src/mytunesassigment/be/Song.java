@@ -14,15 +14,22 @@ public class Song {
     private String title;
     private String artist;
     private String category;
-    private double playtime;
+    private int playtime;
     private String location;
+    private int ID ;
+    private int locationInList;
 
-    public Song(String title, String artist, String category, double playtime, String location) {
+    public Song(String title, String artist, String category, int playtime, String location, int ID) {
         this.title = title;
         this.artist = artist;
         this.category = category;
         this.playtime = playtime;
         this.location = location;
+        this.ID= ID;
+    }
+
+    public int getID() {
+        return ID;
     }
 
     public String getTitle() {
@@ -37,6 +44,14 @@ public class Song {
         return artist;
     }
 
+    public int getLocationInList() {
+        return locationInList;
+    }
+
+    public void setLocationInList(int locationInList) {
+        this.locationInList = locationInList;
+    }
+
     public void setArtist(String artist) {
         this.artist = artist;
     }
@@ -49,7 +64,7 @@ public class Song {
         this.category = category;
     }
 
-    public double getPlaytime() {
+    public int getPlaytime() {
         return playtime;
     }
 
@@ -63,6 +78,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return title + " made by : " + artist ;
+        return locationInList +"."+ title;
     }
+
 }

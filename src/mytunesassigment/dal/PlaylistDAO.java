@@ -6,7 +6,14 @@
 package mytunesassigment.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import mytunesassigment.be.Playlist;
 import mytunesassigment.be.Song;
@@ -38,22 +45,193 @@ public class PlaylistDAO {
 
     /*
         This class should get all the playlists which would be created as a playlist objects
-    To create a playlist object you would need a List of songs (List<Song>) , total count of songs , total time of songs , current song (aka first song)
+    To create a playlist object you would need a List of songs (List<Song>) , total count of songs , total time of songs , 
+    current song (aka first song)
      */
-
     public List<Playlist> getAllPlaylists() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Playlist> allPlaylists = new ArrayList<>();
+
+        try (Connection con = ds.getConnection()) {
+            String sqlStatement = "SELECT * FROM Playlist";
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sqlStatement);
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int id = rs.getInt("id");
+                List<Song> allSongs = getPlaylistSongs(id);
+                Playlist pl = new Playlist(allSongs.size(), countTotalTime(allSongs), name, id);
+                pl.setSongList(allSongs);
+                allPlaylists.add(pl);
+            }
+            return allPlaylists;
+
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return null;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return null;
+        }
+    }
+
+    private int countTotalTime(List<Song> allSongs) {
+        int totalTime = 0;
+        for (Song allSong : allSongs) {
+            totalTime += allSong.getPlaytime();
+        }
+        return totalTime;
+
+    }
+
+    private List<Song> getPlaylistSongs(int id) {
+        List<Song> newSongList = new ArrayList();
+        try (Connection con = ds.getConnection()) {
+            String query = "SELECT * FROM PlaylistSong INNER JOIN Song ON PlaylistSong.SongID = Song.id WHERE PlaylistSong.PlaylistID = ? ORDER by locationInListID desc";
+
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            ResultSet rs = preparedStmt.executeQuery();
+            while (rs.next()) {
+                Song son = new Song(rs.getString("name"), rs.getString("artist"), rs.getString("category"), rs.getInt("time"), rs.getString("url"), rs.getInt("id"));
+                son.setLocationInList(rs.getInt("locationInListID"));
+                newSongList.add(son);
+            }
+            return newSongList;
+
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return null;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return null;
+        }
     }
 
     public void deletePlaylist(Playlist play) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (Connection con = ds.getConnection()) {
+            deleteFromPlaylistSongsEverything(play);
+            String query = "DELETE from Playlist WHERE id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, play.getID());
+
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
     }
 
-    public Playlist createPlaylist(List<Song> songList, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Playlist createPlaylist(String name) {
+        String sql = "INSERT INTO Playlist(name) VALUES (?)";
+        int Id = -1;
+        try (Connection con = ds.getConnection()) {
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.addBatch();
+
+            ps.executeBatch();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
+        Playlist playlist = new Playlist(0, 0, name, getNewestPlaylist());
+        return playlist;
     }
 
     public Playlist updatePlaylist(List<Song> songList, String name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private int getNewestPlaylist() {
+        int newestID = -1;
+        try (Connection con = ds.getConnection()) {
+            String query = "SELECT TOP(1) * FROM Playlist ORDER by id desc";
+
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            ResultSet rs = preparedStmt.executeQuery();
+            while (rs.next()) {
+                newestID = rs.getInt("id");
+            }
+            System.out.println(newestID);
+            return newestID;
+
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return newestID;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return newestID;
+        }
+    }
+
+    public Song addToPlaylist(Playlist playlist, Song song) {
+        System.out.println(song);
+        String sql = "INSERT INTO PlaylistSong(PlaylistID,SongID,locationInListID) VALUES (?,?,?)";
+        int Id = -1;
+        try (Connection con = ds.getConnection()) {
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, playlist.getID());
+            ps.setInt(2, song.getID());
+            ps.setInt(3, getNewestSongInPlaylist(playlist.getID()));
+            ps.addBatch();
+
+            ps.executeBatch();
+            return song;
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return null;
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return null;
+        }
+    }
+
+    private int getNewestSongInPlaylist(int id) {
+        int newestID = -1;
+        try (Connection con = ds.getConnection()) {
+            String query = "SELECT TOP(1) * FROM PlaylistSong WHERE PlaylistID = ? ORDER by locationInListID desc";
+
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            ResultSet rs = preparedStmt.executeQuery();
+            while (rs.next()) {
+                newestID = rs.getInt("locationInListID") + 1;
+            }
+            System.out.println(newestID);
+            return newestID;
+
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return newestID;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return newestID;
+        }
+    }
+
+    private void deleteFromPlaylistSongsEverything(Playlist play) {
+        try (Connection con = ds.getConnection()) {
+
+            String query = "DELETE from PlaylistSong WHERE PlaylistID = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, play.getID());
+
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
     }
 }

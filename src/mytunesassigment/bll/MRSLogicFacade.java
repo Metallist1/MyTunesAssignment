@@ -30,8 +30,6 @@ public interface MRSLogicFacade {
     //deletes specific playlist
     public void deletePlaylist(Playlist play);
     
-    // creates new playlist
-    public Playlist createPlaylist(List<Song> songList, String name);
 
     // updates playlist
     public Playlist updatePlaylist(List<Song> songList, String name);
@@ -40,12 +38,17 @@ public interface MRSLogicFacade {
     public List<Song> getAllSongs();
 
     //creates new song
-    public Song createSong(String title, String artist, String category, double playtime, String location);
+    public Song createSong(String title, String artist, String category, int playtime, String location);
 
     //deletes specific song
     public void deleteSong(Song songToDelete);
 
     //updates song
-    public Song updateSong(String title, String artist, String category, double playtime, String location);
+    public Song updateSong(String title, String artist, String category, int playtime, String location);
+
+    public Playlist createPlaylist(String name);
+
+    public Song addToPlaylist(Playlist playlist, Song song);
+
 
 }

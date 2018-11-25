@@ -1,5 +1,0 @@
-DatabaseName
-Username
-Password
-Port
-Ip address

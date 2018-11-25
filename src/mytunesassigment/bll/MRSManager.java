@@ -38,11 +38,6 @@ public class MRSManager implements MRSLogicFacade {
     }
 
     @Override
-    public Playlist createPlaylist(List<Song> songList, String name) {
-        return playListDAO.createPlaylist(songList, name);
-    }
-
-    @Override
     public Playlist updatePlaylist(List<Song> songList, String name) {
         return playListDAO.updatePlaylist(songList, name);
     }
@@ -53,7 +48,7 @@ public class MRSManager implements MRSLogicFacade {
     }
 
     @Override
-    public Song createSong(String title, String artist, String category, double playtime, String location) {
+    public Song createSong(String title, String artist, String category, int playtime, String location) {
         return songDAO.createSong(title, artist, category, playtime, location);
     }
 
@@ -63,8 +58,18 @@ public class MRSManager implements MRSLogicFacade {
     }
 
     @Override
-    public Song updateSong(String title, String artist, String category, double playtime, String location) {
+    public Song updateSong(String title, String artist, String category, int playtime, String location) {
         return songDAO.updateSong(title, artist, category, playtime, location);
+    }
+
+    @Override
+    public Playlist createPlaylist(String name) {
+                return playListDAO.createPlaylist( name);
+    }
+
+    @Override
+    public Song addToPlaylist(Playlist playlist, Song song) {
+        return playListDAO.addToPlaylist(playlist,song);
     }
 
 }

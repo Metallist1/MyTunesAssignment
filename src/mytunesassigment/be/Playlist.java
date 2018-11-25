@@ -15,16 +15,18 @@ public class Playlist {
 
     private List<Song> songList;
     private int songCount;
-    private double totalTime;
-    private String currentSong;
+    private int totalTime;
     private String name;
-
-    public Playlist(List<Song> songList, int songCount, double totalTime, String currentSong, String name) {
-        this.songList = songList;
+private int ID;
+    public Playlist(int songCount, int totalTime, String name,int ID) {
         this.songCount = songCount;
         this.totalTime = totalTime;
-        this.currentSong = currentSong;
         this.name = name;
+        this.ID= ID;
+    }
+
+    public int getID() {
+        return ID;
     }
 
     public List<Song> getSongList() {
@@ -43,16 +45,12 @@ public class Playlist {
         this.songCount = songCount;
     }
 
-    public double getTotalTime() {
+    public int getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(double totalTime) {
+    public void setTotalTime(int totalTime) {
         this.totalTime = totalTime;
-    }
-
-    public String getCurrentSong() {
-        return currentSong;
     }
 
     public String getName() {
@@ -63,8 +61,9 @@ public class Playlist {
         this.name = name;
     }
 
-    public void setCurrentSong(String currentSong) {
-        this.currentSong = currentSong;
+    @Override
+    public String toString() {
+        return " Name=" + name + "Total song count =" + songCount + ", Total play Time=" + totalTime;
     }
 
 }

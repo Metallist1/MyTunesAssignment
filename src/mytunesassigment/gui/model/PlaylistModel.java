@@ -30,7 +30,7 @@ public class PlaylistModel {
      */
     public PlaylistModel() throws IOException {
         allPlaylists = FXCollections.observableArrayList();
-        logiclayer = (MRSLogicFacade) new MRSManager();
+        logiclayer = new MRSManager();
         allPlaylists.addAll(logiclayer.getAllPlaylists());
     }
 
@@ -38,8 +38,8 @@ public class PlaylistModel {
         return allPlaylists;
     }
 
-    public void createPlaylist(List<Song> songList, String name) {
-        Playlist playList = logiclayer.createPlaylist(songList, name);
+    public void createPlaylist(String name) {
+        Playlist playList = logiclayer.createPlaylist(name);
         allPlaylists.add(playList);
     }
 
@@ -52,5 +52,14 @@ public class PlaylistModel {
         allPlaylists.remove(play);
         Playlist playList = logiclayer.updatePlaylist(songList, name);
         allPlaylists.add(playList);
+    }
+
+    public void editPlaylist(String text) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Song addToPlaylist(Playlist get, Song get0) {
+        Song returnedSong = logiclayer.addToPlaylist(get, get0);
+        return returnedSong;
     }
 }
