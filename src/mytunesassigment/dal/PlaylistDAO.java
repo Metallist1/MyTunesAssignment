@@ -145,8 +145,21 @@ public class PlaylistDAO {
         return playlist;
     }
 
-    public Playlist updatePlaylist(List<Song> songList, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updatePlaylist(Playlist selectedItem, String name) {
+        try (Connection con = ds.getConnection()) {
+
+            String query = "UPDATE Playlist set name = ? WHERE id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setString(1, name);
+            preparedStmt.setInt(2, selectedItem.getID());
+            preparedStmt.executeUpdate();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
     }
 
     private int getNewestPlaylist() {
@@ -180,7 +193,7 @@ public class PlaylistDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, playlist.getID());
             ps.setInt(2, song.getID());
-            ps.setInt(3, getNewestSongInPlaylist(playlist.getID()));
+            ps.setInt(3, getNewestSongInPlaylist(playlist.getID()) + 1);
             ps.addBatch();
 
             ps.executeBatch();
@@ -204,7 +217,7 @@ public class PlaylistDAO {
             preparedStmt.setInt(1, id);
             ResultSet rs = preparedStmt.executeQuery();
             while (rs.next()) {
-                newestID = rs.getInt("locationInListID") + 1;
+                newestID = rs.getInt("locationInListID");
             }
             System.out.println(newestID);
             return newestID;
@@ -225,6 +238,47 @@ public class PlaylistDAO {
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, play.getID());
 
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
+    }
+
+    public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
+        try (Connection con = ds.getConnection()) {
+
+            String query = "DELETE from PlaylistSong WHERE PlaylistID = ? AND SongID = ? AND locationInListID = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, selectedItem.getID());
+            preparedStmt.setInt(2, selectedSong.getID());
+            preparedStmt.setInt(3, selectedSong.getLocationInList());
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
+    }
+
+    public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
+        try (Connection con = ds.getConnection()) {
+            String query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, exhangeWith.getLocationInList());
+            preparedStmt.setInt(2, selectedItem.getID());
+            preparedStmt.setInt(3, selected.getID());
+            preparedStmt.execute();
+            query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ?";
+            preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, selected.getLocationInList());
+            preparedStmt.setInt(2, selectedItem.getID());
+            preparedStmt.setInt(3, exhangeWith.getID());
             preparedStmt.execute();
         } catch (SQLServerException ex) {
             System.out.println(ex);

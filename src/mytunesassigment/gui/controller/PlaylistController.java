@@ -5,10 +5,13 @@
  */
 package mytunesassigment.gui.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,11 +20,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -45,9 +49,7 @@ public class PlaylistController implements Initializable {
     @FXML
     private Label currentSong;
     @FXML
-    private TextField search;
-    @FXML
-    private ListView<Song> songsInPlaylist;
+    private TableView<Song> songsInPlaylist;
     @FXML
     private TableView<Song> tableViewSongs;
     @FXML
@@ -66,6 +68,17 @@ public class PlaylistController implements Initializable {
     private TableColumn<Playlist, Integer> playlistSongTotalCount;
     @FXML
     private TableColumn<Playlist, Integer> playlistSongTotalTime;
+    @FXML
+    private TableColumn<Song, Integer> songInPlaylistID;
+    @FXML
+    private TableColumn<Song, String> songsInPlaylistName;
+    @FXML
+    private TextField searchTextBox;
+    @FXML
+    private Slider volumeSlider;
+
+    private MediaPlayer mediaPlayer;
+    private int currentSongPlaying = 0;
 
     public PlaylistController() throws IOException {
         playlistModel = new PlaylistModel();
@@ -88,63 +101,65 @@ public class PlaylistController implements Initializable {
         playlistSongTotalCount.setCellValueFactory(new PropertyValueFactory<>("songCount"));
         playlistSongTotalTime.setCellValueFactory(new PropertyValueFactory<>("totalTime"));
         playlistTableView.setItems(observableListPlay);
+        songsInPlaylistName.setCellValueFactory(new PropertyValueFactory<>("title"));
+        songInPlaylistID.setCellValueFactory(new PropertyValueFactory<>("IDinsideList"));
     }
 
-    /*
-    This file is just a list of commands that could be usefull for playing music. Please reffer to 
-    https://docs.oracle.com/javafx/2/api/javafx/scene/media/MediaPlayer.html
-    for detaled info of commands and
-    https://stackoverflow.com/questions/22490064/how-to-use-javafx-mediaplayer-correctly
-    to set up media player normally
-     */
     @FXML
     private void SkipSongBackward(ActionEvent event) {
+        mediaPlayer.stop();
+        if (currentSongPlaying - 1 == -1) {
+            currentSongPlaying = 0;
+        } else {
+            currentSongPlaying--;
+        }
+        play();
     }
 
     @FXML
     private void playSong(ActionEvent event) {
-        Media pick = new Media("Despacito.mp3"); // replace this with your own audio url
-        MediaPlayer player = new MediaPlayer(pick);
-
-        // Play the media file
-        player.play();
-        //Sets volume of music to your specified value . 
-        //The volume HAS to be a double and only can be between 1 and 0 .
-        //1 Being full soung . 0 Being mute . So 0.5 Would be half soung
-        player.setVolume(0.5);
-
-        // This next method is initialised is when the media player entity is ready . 
-        // This means on start of song play it will do what ever you type in ready.
-        // Could be used for counter , showing song name or something else.
-        player.setOnReady(new Runnable() {
-            @Override
-            public void run() {
-                //Your code that will run at the start of the song
-            }
-        });
-
-        //This method runs when the audio ends .
-        //Could be used to switch to next song and change the look .
-        // Please note that all the coding should be in the run method that is created
-        player.setOnEndOfMedia(new Runnable() {
-            @Override
-            public void run() {
-                //Your code that will run at end of audio
-            }
-        });
+        currentSongPlaying = songsInPlaylist.getSelectionModel().getSelectedIndex();
+        play();
     }
 
     @FXML
     private void skipSongForward(ActionEvent event) {
+        mediaPlayer.stop();
+        if (currentSongPlaying + 1 == songsInPlaylist.getItems().size()) {
+            currentSongPlaying = 0;
+        } else {
+            currentSongPlaying++;
+        }
+        play();
     }
 
     @FXML
     private void setSound(MouseEvent event) {
-
+        if(mediaPlayer != null){
+        makeSound();
+        }
     }
 
-    @FXML
-    private void searchForSong(ActionEvent event) {
+    private void makeSound() {
+        mediaPlayer.setVolume(volumeSlider.getValue());
+    }
+
+    private void play() {
+        mediaPlayer = new MediaPlayer(new Media(new File(songsInPlaylist.getItems().get(currentSongPlaying).getLocation()).toURI().toString()));
+        currentSong.setText(songsInPlaylist.getItems().get(currentSongPlaying).getTitle() + " is now playing");
+        mediaPlayer.play();
+        makeSound();
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                if (songsInPlaylist.getItems().size() == currentSongPlaying + 1) {
+                    currentSongPlaying = 0;
+                } else {
+                    currentSongPlaying++;
+                }
+                play();
+            }
+        });
     }
 
     @FXML
@@ -158,32 +173,41 @@ public class PlaylistController implements Initializable {
     }
 
     @FXML
-    private void editPlaylist(ActionEvent event) {
+    private void editPlaylist(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mytunesassigment/gui/view/popupPlaylist.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        fxmlLoader.<PopupPlaylistController>getController().setInfo(playlistTableView.getSelectionModel().getSelectedItem());
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1, 800, 800));
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @FXML
     private void deletePlaylist(ActionEvent event) {
-        int playlistLocation = playlistTableView.getSelectionModel().getSelectedIndex();
-        playlistModel.deletePlaylist(observableListPlay.get(playlistLocation));
+        playlistModel.deletePlaylist(playlistTableView.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void moveSongUp(ActionEvent event) {
+        int position = songsInPlaylist.getSelectionModel().getSelectedIndex();
+        playlistModel.editSongPosition(playlistTableView.getSelectionModel().getSelectedItem(), songsInPlaylist.getItems().get(position), songsInPlaylist.getItems().get(position + 1));
     }
 
     @FXML
     private void moveSongDown(ActionEvent event) {
+        int position = songsInPlaylist.getSelectionModel().getSelectedIndex();
+        playlistModel.editSongPosition(playlistTableView.getSelectionModel().getSelectedItem(), songsInPlaylist.getItems().get(position), songsInPlaylist.getItems().get(position - 11));
     }
 
     @FXML
     private void removeSong(ActionEvent event) {
+        playlistModel.removeSongFromPlaylist(playlistTableView.getSelectionModel().getSelectedItem(), songsInPlaylist.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void addSong(ActionEvent event) {
-        int playlistLocation = playlistTableView.getSelectionModel().getSelectedIndex();
-        int songLocation = tableViewSongs.getSelectionModel().getSelectedIndex();
-        playlistModel.addToPlaylist(observableListPlay.get(playlistLocation), observableListSong.get(songLocation));
+        playlistModel.addToPlaylist(playlistTableView.getSelectionModel().getSelectedItem(), tableViewSongs.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -197,24 +221,41 @@ public class PlaylistController implements Initializable {
     }
 
     @FXML
-    private void editSong(ActionEvent event) {
+    private void editSong(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mytunesassigment/gui/view/popupSong.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        fxmlLoader.<PopupSongController>getController().setInfo(tableViewSongs.getSelectionModel().getSelectedItem());
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1, 800, 800));
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @FXML
     private void deleteSong(ActionEvent event) {
-    }
-
-    @FXML
-    private void close(ActionEvent event) {
+        songModel.deleteSong(tableViewSongs.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void displaySongsInPlaylist(MouseEvent event) {
         songsInPlaylist.getItems().clear();
-        int location = playlistTableView.getSelectionModel().getSelectedIndex();
-        List<Song> toBeAddedSongList = observableListPlay.get(location).getSongList();
+        List<Song> toBeAddedSongList = playlistTableView.getSelectionModel().getSelectedItem().getSongList();
         for (int x = toBeAddedSongList.size() - 1; x >= 0; x--) {
+            toBeAddedSongList.get(x).setIDinsideList(toBeAddedSongList.size() - x);
             songsInPlaylist.getItems().add(toBeAddedSongList.get(x));
+        }
+    }
+
+    @FXML
+    private void search(KeyEvent event) {
+        if (searchTextBox.getText() == null || searchTextBox.getText().isEmpty()) {
+            tableViewSongs.setItems(songModel.getSongs());
+        } else {
+            ObservableList<Song> foundMovieList;
+            foundMovieList = songModel.search(songModel.getSongs(), searchTextBox.getText());
+            if (foundMovieList != null) {
+                tableViewSongs.setItems(foundMovieList);
+            }
         }
     }
 

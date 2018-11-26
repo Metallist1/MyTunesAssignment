@@ -6,6 +6,7 @@
 package mytunesassigment.bll;
 
 import java.util.List;
+import javafx.collections.ObservableList;
 import mytunesassigment.be.Playlist;
 import mytunesassigment.be.Song;
 
@@ -31,8 +32,6 @@ public interface MRSLogicFacade {
     public void deletePlaylist(Playlist play);
     
 
-    // updates playlist
-    public Playlist updatePlaylist(List<Song> songList, String name);
 
     //gets all songs
     public List<Song> getAllSongs();
@@ -43,12 +42,18 @@ public interface MRSLogicFacade {
     //deletes specific song
     public void deleteSong(Song songToDelete);
 
-    //updates song
-    public Song updateSong(String title, String artist, String category, int playtime, String location);
-
     public Playlist createPlaylist(String name);
 
     public Song addToPlaylist(Playlist playlist, Song song);
 
+    public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong);
+
+    public void editPlaylist(Playlist get, String text);
+
+    public Song updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location);
+
+    public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith);
+
+    public ObservableList<Song> search(ObservableList<Song> items, String text);
 
 }

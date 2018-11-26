@@ -16,8 +16,9 @@ public class Song {
     private String category;
     private int playtime;
     private String location;
-    private int ID ;
+    private int ID;
     private int locationInList;
+    private int IDinsideList = 0;
 
     public Song(String title, String artist, String category, int playtime, String location, int ID) {
         this.title = title;
@@ -25,7 +26,7 @@ public class Song {
         this.category = category;
         this.playtime = playtime;
         this.location = location;
-        this.ID= ID;
+        this.ID = ID;
     }
 
     public int getID() {
@@ -34,6 +35,14 @@ public class Song {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getIDinsideList() {
+        return IDinsideList;
+    }
+
+    public void setIDinsideList(int IDinsideList) {
+        this.IDinsideList = IDinsideList;
     }
 
     public void setTitle(String title) {
@@ -78,7 +87,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return locationInList +"."+ title;
+        return title;
     }
 
 }

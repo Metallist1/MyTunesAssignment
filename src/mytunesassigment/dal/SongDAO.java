@@ -79,17 +79,9 @@ public class SongDAO {
             System.out.println(ex);
 
         }
-        Song son = new Song(title, artist, category, playtime, location,getNewestSongID());
+        Song son = new Song(title, artist, category, playtime, location, getNewestSongID());
 
         return son;
-    }
-
-    public void deleteSong() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public Song updateSong(String title, String artist, String category, double playtime, String location) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private int getNewestSongID() {
@@ -110,6 +102,63 @@ public class SongDAO {
         } catch (SQLException ex) {
             System.out.println(ex);
             return newestID;
+        }
+    }
+
+    public void deleteSong(Song songToDelete) {
+        try (Connection con = ds.getConnection()) {
+            deleteFromPlaylistSongsEverything(songToDelete);
+            String query = "DELETE from Song WHERE id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, songToDelete.getID());
+
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
+    }
+
+    private void deleteFromPlaylistSongsEverything(Song songToDelete) {
+        try (Connection con = ds.getConnection()) {
+
+            String query = "DELETE from PlaylistSong WHERE SongID = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, songToDelete.getID());
+
+            preparedStmt.execute();
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+
+        }
+    }
+
+    public Song updateSong(Song song, String title, String artist, String category, int playtime, String location) {
+        try (Connection con = ds.getConnection()) {
+
+            String query = "UPDATE Song set name = ?,artist = ?,category = ?,time = ?,url = ? WHERE id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setString(1, title);
+            preparedStmt.setString(2, artist);
+            preparedStmt.setString(3, category);
+            preparedStmt.setInt(4, playtime);
+            preparedStmt.setString(5, location);
+            preparedStmt.setInt(6, song.getID());
+            preparedStmt.executeUpdate();
+            Song son = new Song(title, artist, category, playtime, location, song.getID());
+            return son;
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+            return null;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return null;
         }
     }
 

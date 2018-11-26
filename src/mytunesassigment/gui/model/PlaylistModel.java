@@ -48,18 +48,20 @@ public class PlaylistModel {
         allPlaylists.remove(play);
     }
 
-    public void updatePlaylist(Playlist play, List<Song> songList, String name) {
-        allPlaylists.remove(play);
-        Playlist playList = logiclayer.updatePlaylist(songList, name);
-        allPlaylists.add(playList);
-    }
-
-    public void editPlaylist(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void editPlaylist(Playlist get,String text) {
+        logiclayer.editPlaylist(get, text);
     }
 
     public Song addToPlaylist(Playlist get, Song get0) {
         Song returnedSong = logiclayer.addToPlaylist(get, get0);
         return returnedSong;
+    }
+
+    public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
+        logiclayer.removeSongFromPlaylist(selectedItem, selectedSong);
+    }
+
+    public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
+        logiclayer.editSongPosition(selectedItem,selected, exhangeWith);
     }
 }

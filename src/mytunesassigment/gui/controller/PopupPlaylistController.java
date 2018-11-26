@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import mytunesassigment.be.Playlist;
 import mytunesassigment.gui.model.PlaylistModel;
 
 /**
@@ -26,7 +27,10 @@ public class PopupPlaylistController implements Initializable {
 
     @FXML
     private TextField playlistNameField;
+
     private PlaylistModel playlistModel;
+    private boolean isEditing = false;
+    private Playlist editingList;
 
     /**
      * Initializes the controller class.
@@ -37,19 +41,17 @@ public class PopupPlaylistController implements Initializable {
             playlistModel = new PlaylistModel();
         } catch (IOException ex) {
             Logger.getLogger(PopupPlaylistController.class.getName()).log(Level.SEVERE, null, ex);
+            isEditing = false;
         }
     }
 
     @FXML
     private void savePlaylistname(ActionEvent event) {
-        if (playlistNameField.getText() != null && !playlistNameField.getText().isEmpty()) {
+        if (playlistNameField.getText() != null && !playlistNameField.getText().isEmpty() && !isEditing) {
             playlistModel.createPlaylist(playlistNameField.getText());
-        }
-    }
-
-    private void editPlaylistName() {
-        if (playlistNameField.getText() != null && !playlistNameField.getText().isEmpty()) {
-            playlistModel.editPlaylist(playlistNameField.getText());
+                    isEditing = false;
+        } else {
+            playlistModel.editPlaylist(editingList, playlistNameField.getText());
         }
     }
 
@@ -57,6 +59,12 @@ public class PopupPlaylistController implements Initializable {
     private void goBackFromPlaylist(ActionEvent event) {
         Stage stage = (Stage) playlistNameField.getScene().getWindow();
         stage.close();
+    }
+
+    void setInfo(Playlist selectedItem) {
+        isEditing = true;
+        editingList = selectedItem;
+        playlistNameField.setText(selectedItem.getName());
     }
 
 }

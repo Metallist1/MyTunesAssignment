@@ -17,12 +17,13 @@ public class Playlist {
     private int songCount;
     private int totalTime;
     private String name;
-private int ID;
-    public Playlist(int songCount, int totalTime, String name,int ID) {
+    private int ID;
+
+    public Playlist(int songCount, int totalTime, String name, int ID) {
         this.songCount = songCount;
         this.totalTime = totalTime;
         this.name = name;
-        this.ID= ID;
+        this.ID = ID;
     }
 
     public int getID() {

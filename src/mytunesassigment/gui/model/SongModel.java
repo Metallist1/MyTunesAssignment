@@ -44,7 +44,11 @@ public class SongModel {
 
     public void updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location) {
         allSongs.remove(songToDelete);
-        Song newSong = logiclayer.updateSong(title, artist, category, playtime, location);
+        Song newSong = logiclayer.updateSong(songToDelete,title, artist, category, playtime, location);
         allSongs.add(newSong);
+    }
+
+    public ObservableList<Song> search(ObservableList<Song> items, String text) {
+        return logiclayer.search(items, text);
     }
 }
