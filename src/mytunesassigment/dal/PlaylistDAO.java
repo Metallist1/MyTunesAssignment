@@ -268,18 +268,20 @@ public class PlaylistDAO {
 
     public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
         try (Connection con = ds.getConnection()) {
-            String query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ?";
+            String query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ? AND locationInListID = ? ";
+
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, exhangeWith.getLocationInList());
             preparedStmt.setInt(2, selectedItem.getID());
             preparedStmt.setInt(3, selected.getID());
-            preparedStmt.execute();
-            query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ?";
-            preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(4, selected.getLocationInList());
+            preparedStmt.addBatch();
             preparedStmt.setInt(1, selected.getLocationInList());
             preparedStmt.setInt(2, selectedItem.getID());
             preparedStmt.setInt(3, exhangeWith.getID());
-            preparedStmt.execute();
+            preparedStmt.setInt(4, exhangeWith.getLocationInList());
+            preparedStmt.addBatch();
+            preparedStmt.executeBatch();
         } catch (SQLServerException ex) {
             System.out.println(ex);
 

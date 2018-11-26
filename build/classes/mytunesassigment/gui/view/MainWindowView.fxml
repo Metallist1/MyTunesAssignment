@@ -23,7 +23,7 @@
                   <Button mnemonicParsing="false" onAction="#skipSongForward" text="Front" />
                </children>
             </HBox>
-            <Slider fx:id="volumeSlider" onMouseReleased="#setSound" />
+            <Slider fx:id="volumeSlider" onMouseReleased="#setSound" value="50.0" />
          </children>
       </VBox>
       <HBox layoutX="545.0" layoutY="26.0" prefHeight="32.0" prefWidth="270.0">
@@ -66,8 +66,8 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#moveSongUp" text="/\" />
-                        <Button mnemonicParsing="false" onAction="#moveSongDown" text="\\/" />
+                        <Button mnemonicParsing="false" onAction="#moveSongDown" text="/\" />
+                        <Button mnemonicParsing="false" onAction="#moveSongUp" text="\\/" />
                         <Button mnemonicParsing="false" onAction="#removeSong" text="Remove" />
                      </children>
                   </HBox>

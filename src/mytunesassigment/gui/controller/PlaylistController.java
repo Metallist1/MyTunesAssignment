@@ -197,7 +197,7 @@ public class PlaylistController implements Initializable {
     @FXML
     private void moveSongDown(ActionEvent event) {
         int position = songsInPlaylist.getSelectionModel().getSelectedIndex();
-        playlistModel.editSongPosition(playlistTableView.getSelectionModel().getSelectedItem(), songsInPlaylist.getItems().get(position), songsInPlaylist.getItems().get(position - 11));
+        playlistModel.editSongPosition(playlistTableView.getSelectionModel().getSelectedItem(), songsInPlaylist.getItems().get(position), songsInPlaylist.getItems().get(position - 1));
     }
 
     @FXML
