@@ -6,13 +6,12 @@
 package mytunesassigment.gui.model;
 
 import java.io.IOException;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import mytunesassigment.be.Playlist;
 import mytunesassigment.be.Song;
-import mytunesassigment.bll.MRSLogicFacade;
-import mytunesassigment.bll.MRSManager;
+import mytunesassigment.bll.Manager;
+import mytunesassigment.bll.LogicFacade;
 
 /**
  *
@@ -20,41 +19,34 @@ import mytunesassigment.bll.MRSManager;
  */
 public class PlaylistModel {
 
-    private ObservableList<Playlist> allPlaylists = FXCollections.observableArrayList();
+    private ObservableList<Playlist> allPlaylists;
 
-    private MRSLogicFacade logiclayer;
+    private LogicFacade logiclayer;
 
-    /*
-    The purpuse of this class is being a communication point between the GUI and BL.
-    Operations in this class should be limited to only calling methods from the MRSLogicFacade(MRSManager)
-     */
     public PlaylistModel() throws IOException {
-        allPlaylists = FXCollections.observableArrayList();
-        logiclayer = new MRSManager();
-        allPlaylists.addAll(logiclayer.getAllPlaylists());
+        logiclayer = new Manager();
     }
 
     public ObservableList<Playlist> getPlaylists() {
+        allPlaylists = FXCollections.observableArrayList();
+        allPlaylists.addAll(logiclayer.getAllPlaylists());
         return allPlaylists;
     }
 
     public void createPlaylist(String name) {
         Playlist playList = logiclayer.createPlaylist(name);
-        allPlaylists.add(playList);
     }
 
     public void deletePlaylist(Playlist play) {
         logiclayer.deletePlaylist(play);
-        allPlaylists.remove(play);
     }
 
-    public void editPlaylist(Playlist get,String text) {
+    public void editPlaylist(Playlist get, String text) {
         logiclayer.editPlaylist(get, text);
     }
 
     public Song addToPlaylist(Playlist get, Song get0) {
-        Song returnedSong = logiclayer.addToPlaylist(get, get0);
-        return returnedSong;
+        return logiclayer.addToPlaylist(get, get0);
     }
 
     public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
@@ -62,6 +54,6 @@ public class PlaylistModel {
     }
 
     public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
-        logiclayer.editSongPosition(selectedItem,selected, exhangeWith);
+        logiclayer.editSongPosition(selectedItem, selected, exhangeWith);
     }
 }

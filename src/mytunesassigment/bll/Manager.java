@@ -12,23 +12,25 @@ import mytunesassigment.be.Playlist;
 import mytunesassigment.be.Song;
 import mytunesassigment.bll.util.SongFilter;
 import mytunesassigment.dal.PlaylistDAO;
+import mytunesassigment.dal.PlaylistSongDAO;
 import mytunesassigment.dal.SongDAO;
 
 /**
  *
  * @author nedas
  */
-public class MRSManager implements MRSLogicFacade {
+public class Manager implements LogicFacade {
 
     private final PlaylistDAO playListDAO;
     private final SongDAO songDAO;
     private final SongFilter songSearcher;
+    private final PlaylistSongDAO PlaylistSongInfo;
 
-    // Constructor initialises the DAO classes
-    public MRSManager() throws IOException {
+    public Manager() throws IOException {
         playListDAO = new PlaylistDAO();
         songDAO = new SongDAO();
         songSearcher = new SongFilter();
+        PlaylistSongInfo= new PlaylistSongDAO();
     }
 
     @Override
@@ -38,6 +40,7 @@ public class MRSManager implements MRSLogicFacade {
 
     @Override
     public void deletePlaylist(Playlist play) {
+        PlaylistSongInfo.deleteFromPlaylistSongsEverything(play);
         playListDAO.deletePlaylist(play);
     }
 
@@ -53,6 +56,7 @@ public class MRSManager implements MRSLogicFacade {
 
     @Override
     public void deleteSong(Song songToDelete) {
+        PlaylistSongInfo.deleteFromPlaylistSongsEverything(songToDelete);
         songDAO.deleteSong(songToDelete);
     }
 
@@ -68,12 +72,12 @@ public class MRSManager implements MRSLogicFacade {
 
     @Override
     public Song addToPlaylist(Playlist playlist, Song song) {
-        return playListDAO.addToPlaylist(playlist, song);
+        return PlaylistSongInfo.addToPlaylist(playlist, song);
     }
 
     @Override
     public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
-        playListDAO.removeSongFromPlaylist(selectedItem, selectedSong);
+        PlaylistSongInfo.removeSongFromPlaylist(selectedItem, selectedSong);
     }
 
     @Override
@@ -83,7 +87,7 @@ public class MRSManager implements MRSLogicFacade {
 
     @Override
     public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
-        playListDAO.editSongPosition(selectedItem, selected, exhangeWith);
+        PlaylistSongInfo.editSongPosition(selectedItem, selected, exhangeWith);
     }
 
     @Override

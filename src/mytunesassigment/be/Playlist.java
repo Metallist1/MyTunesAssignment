@@ -17,7 +17,7 @@ public class Playlist {
     private int songCount;
     private int totalTime;
     private String name;
-    private int ID;
+    private final int ID;
 
     public Playlist(int songCount, int totalTime, String name, int ID) {
         this.songCount = songCount;

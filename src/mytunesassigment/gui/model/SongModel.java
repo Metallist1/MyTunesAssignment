@@ -9,8 +9,8 @@ import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import mytunesassigment.be.Song;
-import mytunesassigment.bll.MRSLogicFacade;
-import mytunesassigment.bll.MRSManager;
+import mytunesassigment.bll.Manager;
+import mytunesassigment.bll.LogicFacade;
 
 /**
  *
@@ -20,31 +20,29 @@ public class SongModel {
 
     private ObservableList<Song> allSongs = FXCollections.observableArrayList();
 
-    private MRSLogicFacade logiclayer;
+    private final LogicFacade logiclayer;
 
     public SongModel() throws IOException {
-        allSongs = FXCollections.observableArrayList();
-        logiclayer = (MRSLogicFacade) new MRSManager();
-        allSongs.addAll(logiclayer.getAllSongs());
+        logiclayer = (LogicFacade) new Manager();
     }
 
     public ObservableList<Song> getSongs() {
+        allSongs = FXCollections.observableArrayList();
+        allSongs.addAll(logiclayer.getAllSongs());
         return allSongs;
     }
 
     public void createSong(String title, String artist, String category, int playtime, String location) {
-        Song newSong = logiclayer.createSong(title, artist, category, playtime, location);
-        allSongs.add(newSong);
+        logiclayer.createSong(title, artist, category, playtime, location);
     }
 
     public void deleteSong(Song songToDelete) {
         logiclayer.deleteSong(songToDelete);
-        allSongs.remove(songToDelete);
     }
 
     public void updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location) {
         allSongs.remove(songToDelete);
-        Song newSong = logiclayer.updateSong(songToDelete,title, artist, category, playtime, location);
+        Song newSong = logiclayer.updateSong(songToDelete, title, artist, category, playtime, location);
         allSongs.add(newSong);
     }
 

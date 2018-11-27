@@ -14,9 +14,9 @@ public class Song {
     private String title;
     private String artist;
     private String category;
-    private int playtime;
+    private final int playtime;
     private String location;
-    private int ID;
+    private final int ID;
     private int locationInList;
     private int IDinsideList = 0;
 

@@ -48,7 +48,6 @@ public class SongDAO {
                 allSongs.add(son);
             }
             return allSongs;
-
         } catch (SQLServerException ex) {
             System.out.println(ex);
             return null;
@@ -95,7 +94,6 @@ public class SongDAO {
                 newestID = rs.getInt("id");
             }
             return newestID;
-
         } catch (SQLServerException ex) {
             System.out.println(ex);
             return newestID;
@@ -107,7 +105,6 @@ public class SongDAO {
 
     public void deleteSong(Song songToDelete) {
         try (Connection con = ds.getConnection()) {
-            deleteFromPlaylistSongsEverything(songToDelete);
             String query = "DELETE from Song WHERE id = ?";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, songToDelete.getID());
@@ -115,27 +112,8 @@ public class SongDAO {
             preparedStmt.execute();
         } catch (SQLServerException ex) {
             System.out.println(ex);
-
         } catch (SQLException ex) {
             System.out.println(ex);
-
-        }
-    }
-
-    private void deleteFromPlaylistSongsEverything(Song songToDelete) {
-        try (Connection con = ds.getConnection()) {
-
-            String query = "DELETE from PlaylistSong WHERE SongID = ?";
-            PreparedStatement preparedStmt = con.prepareStatement(query);
-            preparedStmt.setInt(1, songToDelete.getID());
-
-            preparedStmt.execute();
-        } catch (SQLServerException ex) {
-            System.out.println(ex);
-
-        } catch (SQLException ex) {
-            System.out.println(ex);
-
         }
     }
 

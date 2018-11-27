@@ -31,6 +31,7 @@ public class PopupPlaylistController implements Initializable {
     private PlaylistModel playlistModel;
     private boolean isEditing = false;
     private Playlist editingList;
+    PlaylistController controller1;
 
     /**
      * Initializes the controller class.
@@ -40,6 +41,7 @@ public class PopupPlaylistController implements Initializable {
         try {
             playlistModel = new PlaylistModel();
         } catch (IOException ex) {
+            System.out.println(ex);
             Logger.getLogger(PopupPlaylistController.class.getName()).log(Level.SEVERE, null, ex);
             isEditing = false;
         }
@@ -49,10 +51,10 @@ public class PopupPlaylistController implements Initializable {
     private void savePlaylistname(ActionEvent event) {
         if (playlistNameField.getText() != null && !playlistNameField.getText().isEmpty() && !isEditing) {
             playlistModel.createPlaylist(playlistNameField.getText());
-                    isEditing = false;
         } else {
             playlistModel.editPlaylist(editingList, playlistNameField.getText());
         }
+        controller1.refreshList();
     }
 
     @FXML
@@ -65,6 +67,10 @@ public class PopupPlaylistController implements Initializable {
         isEditing = true;
         editingList = selectedItem;
         playlistNameField.setText(selectedItem.getName());
+    }
+
+    void setController(PlaylistController controller1) {
+        this.controller1 = controller1;
     }
 
 }

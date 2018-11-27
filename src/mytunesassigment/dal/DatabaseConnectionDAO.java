@@ -19,12 +19,6 @@ import java.util.List;
 
 public class DatabaseConnectionDAO {
     
-    /*
-    The basic idea behind this is that you get your login info from a file and send an array back to your DAO classes .
-    This prevents the user from retyping code .
-    And its kinda safe. But be smart and when you upload to github either modify the ignore file to actually account for the login info txt file
-    Or type out the login info from the TXT file.
-    */
         public List<String> getDatabaseInfo() throws IOException {
         List<String> info = new ArrayList();
         String source = "data/loginDetails.txt";
