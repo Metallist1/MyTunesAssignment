@@ -5,13 +5,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mytunesassigment.gui.controller.PopupPlaylistController">
    <children>
-      <Label layoutX="236.0" layoutY="29.0" text="Create / Edit playlist" />
+      <Label fx:id="specificFunctionLabel" layoutX="236.0" layoutY="29.0" text="Create / Edit playlist" />
       <TextField fx:id="playlistNameField" layoutX="173.0" layoutY="111.0" promptText="Insert Name" />
       <Label layoutX="120.0" layoutY="115.0" text="Name : " />
       <Button layoutX="296.0" layoutY="175.0" mnemonicParsing="false" onAction="#savePlaylistname" text="Save" />
       <Button layoutX="393.0" layoutY="175.0" mnemonicParsing="false" onAction="#goBackFromPlaylist" text="Cancel" />
+      <Label fx:id="errorLabel" layoutX="120.0" layoutY="72.0" />
    </children>
 </AnchorPane>

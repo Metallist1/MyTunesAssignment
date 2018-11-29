@@ -25,6 +25,9 @@ public class PlaylistSongDAO {
 
     SQLServerDataSource ds;
 
+    /*
+    Initialises the constructor. Gets the array from the DatabaseConnectionDAO and sets up the database so the class can use it.
+     */
     public PlaylistSongDAO() throws IOException {
         this.ds = new SQLServerDataSource();
         DatabaseConnectionDAO connectionInfo = new DatabaseConnectionDAO();
@@ -36,17 +39,20 @@ public class PlaylistSongDAO {
         ds.setServerName(infoList.get(4));
     }
 
+    /*
+    Gets a joint playlist query. Which is used to create a playlist list of songs.
+     */
     public List<Song> getPlaylistSongs(int id) {
         List<Song> newSongList = new ArrayList();
         try (Connection con = ds.getConnection()) {
-            String query = "SELECT * FROM PlaylistSong INNER JOIN Song ON PlaylistSong.SongID = Song.id WHERE PlaylistSong.PlaylistID = ? ORDER by locationInListID desc";
+            String query = "SELECT * FROM PlaylistSong INNER JOIN Song ON PlaylistSong.SongID = Song.id WHERE PlaylistSong.PlaylistID = ? ORDER by locationInListID desc"; // Gets all songs from a coresponding playlist.
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, id);
             ResultSet rs = preparedStmt.executeQuery();
             while (rs.next()) {
-                Song son = new Song(rs.getString("name"), rs.getString("artist"), rs.getString("category"), rs.getInt("time"), rs.getString("url"), rs.getInt("id"));
-                son.setLocationInList(rs.getInt("locationInListID"));
-                newSongList.add(son);
+                Song son = new Song(rs.getString("name"), rs.getString("artist"), rs.getString("category"), rs.getInt("time"), rs.getString("url"), rs.getInt("id")); // Sets up a song object
+                son.setLocationInList(rs.getInt("locationInListID")); //Inserts location in list int. It is used for updating possition on the ist
+                newSongList.add(son); //adds song to a song array
             }
             return newSongList;
         } catch (SQLServerException ex) {
@@ -58,6 +64,9 @@ public class PlaylistSongDAO {
         }
     }
 
+    /*
+    Removes a specific song from every playlist in the Playlist Song database table. (So the song can be removed from the song database table)
+     */
     public void deleteFromPlaylistSongsEverything(Song songToDelete) {
         try (Connection con = ds.getConnection()) {
             String query = "DELETE from PlaylistSong WHERE SongID = ?";
@@ -71,17 +80,22 @@ public class PlaylistSongDAO {
         }
     }
 
+    /*
+    Adds song to playlist 
+     */
     public Song addToPlaylist(Playlist playlist, Song song) {
         String sql = "INSERT INTO PlaylistSong(PlaylistID,SongID,locationInListID) VALUES (?,?,?)";
         int Id = -1;
         try (Connection con = ds.getConnection()) {
             PreparedStatement ps = con.prepareStatement(sql);
+            Id = getNewestSongInPlaylist(playlist.getID()) + 1;
             ps.setInt(1, playlist.getID());
             ps.setInt(2, song.getID());
-            ps.setInt(3, getNewestSongInPlaylist(playlist.getID()) + 1);
+            ps.setInt(3, Id);
             ps.addBatch();
             ps.executeBatch();
-            return song;
+            song.setLocationInList(Id); //sets up new location in list for user to see
+            return song; //Returns song object
         } catch (SQLServerException ex) {
             System.out.println(ex);
             return null;
@@ -92,6 +106,9 @@ public class PlaylistSongDAO {
         }
     }
 
+    /*
+    Gets newest id inserted into a specific playlist
+     */
     private int getNewestSongInPlaylist(int id) {
         int newestID = -1;
         try (Connection con = ds.getConnection()) {
@@ -113,6 +130,9 @@ public class PlaylistSongDAO {
         }
     }
 
+    /*
+    Deletes playlist from the Playlist song table in database. (It allows playlist to be deleted from playlist table)
+     */
     public void deleteFromPlaylistSongsEverything(Playlist play) {
         try (Connection con = ds.getConnection()) {
             String query = "DELETE from PlaylistSong WHERE PlaylistID = ?";
@@ -126,6 +146,37 @@ public class PlaylistSongDAO {
         }
     }
 
+    /*
+    Switches the song positions in the list but using batch proccesses.
+     */
+    public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
+        try (Connection con = ds.getConnection()) {
+            String query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ? AND locationInListID = ? ";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, exhangeWith.getLocationInList());
+            preparedStmt.setInt(2, selectedItem.getID());
+            preparedStmt.setInt(3, selected.getID());
+            preparedStmt.setInt(4, selected.getLocationInList());
+            preparedStmt.addBatch();
+            preparedStmt.setInt(1, selected.getLocationInList());
+            preparedStmt.setInt(2, selectedItem.getID());
+            preparedStmt.setInt(3, exhangeWith.getID());
+            preparedStmt.setInt(4, exhangeWith.getLocationInList());
+            preparedStmt.addBatch();
+            preparedStmt.executeBatch();
+            int temp = selected.getLocationInList(); // Creates a temporary ID
+            selected.setLocationInList(exhangeWith.getLocationInList()); // switches the first song with exchange song ID
+            exhangeWith.setLocationInList(temp); // Switches exchange song ID with the temporary ID
+        } catch (SQLServerException ex) {
+            System.out.println(ex);
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    /*
+    Removes a specific song from playlist.
+     */
     public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
         try (Connection con = ds.getConnection()) {
             String query = "DELETE from PlaylistSong WHERE PlaylistID = ? AND SongID = ? AND locationInListID = ?";
@@ -140,28 +191,4 @@ public class PlaylistSongDAO {
             System.out.println(ex);
         }
     }
-
-    public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
-        try (Connection con = ds.getConnection()) {
-            String query = "UPDATE PlaylistSong set locationInListID = ? WHERE PlaylistID = ? AND SongID = ? AND locationInListID = ? ";
-
-            PreparedStatement preparedStmt = con.prepareStatement(query);
-            preparedStmt.setInt(1, exhangeWith.getLocationInList());
-            preparedStmt.setInt(2, selectedItem.getID());
-            preparedStmt.setInt(3, selected.getID());
-            preparedStmt.setInt(4, selected.getLocationInList());
-            preparedStmt.addBatch();
-            preparedStmt.setInt(1, selected.getLocationInList());
-            preparedStmt.setInt(2, selectedItem.getID());
-            preparedStmt.setInt(3, exhangeWith.getID());
-            preparedStmt.setInt(4, exhangeWith.getLocationInList());
-            preparedStmt.addBatch();
-            preparedStmt.executeBatch();
-        } catch (SQLServerException ex) {
-            System.out.println(ex);
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-    }
-
 }

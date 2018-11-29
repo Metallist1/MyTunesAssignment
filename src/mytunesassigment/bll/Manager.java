@@ -26,6 +26,9 @@ public class Manager implements LogicFacade {
     private final SongFilter songSearcher;
     private final PlaylistSongDAO PlaylistSongInfo;
 
+    /*
+    Initialises all classes in DAL
+    */
     public Manager() throws IOException {
         playListDAO = new PlaylistDAO();
         songDAO = new SongDAO();
@@ -40,8 +43,8 @@ public class Manager implements LogicFacade {
 
     @Override
     public void deletePlaylist(Playlist play) {
-        PlaylistSongInfo.deleteFromPlaylistSongsEverything(play);
-        playListDAO.deletePlaylist(play);
+        PlaylistSongInfo.deleteFromPlaylistSongsEverything(play); // Deletes all playlist references in playlistSong table
+        playListDAO.deletePlaylist(play); //Deletes the playlist from playlist table
     }
 
     @Override
@@ -56,8 +59,8 @@ public class Manager implements LogicFacade {
 
     @Override
     public void deleteSong(Song songToDelete) {
-        PlaylistSongInfo.deleteFromPlaylistSongsEverything(songToDelete);
-        songDAO.deleteSong(songToDelete);
+        PlaylistSongInfo.deleteFromPlaylistSongsEverything(songToDelete);// Deletes all song references in playlistSong table
+        songDAO.deleteSong(songToDelete); // Deletes song from song table
     }
 
     @Override

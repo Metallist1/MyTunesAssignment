@@ -11,20 +11,22 @@ package mytunesassigment.be;
  */
 public class Song {
 
-    private String title;
-    private String artist;
-    private String category;
-    private final int playtime;
-    private String location;
-    private final int ID;
-    private int locationInList;
-    private int IDinsideList = 0;
+    private String title; // Title of song
+    private String artist; // Artist of song
+    private String category; // Category of song
+    private final int playtime; // Song playtime in seconds
+    private final String playtimeString; // Song playtime in minute:second format
+    private String location; // Song URL on the system
+    private final int ID; // Unique song ID in the database
+    private int locationInList; // Song ID thats hidden from the user. Its used mainly for moving the song up and down the list in database.
+    private int IDinsideList = 0; // Song ID thats visable to the user once displayed in the Playlist songs table
 
     public Song(String title, String artist, String category, int playtime, String location, int ID) {
         this.title = title;
         this.artist = artist;
         this.category = category;
         this.playtime = playtime;
+        playtimeString = getPlaytimeString();
         this.location = location;
         this.ID = ID;
     }
@@ -53,16 +55,16 @@ public class Song {
         return artist;
     }
 
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
     public int getLocationInList() {
         return locationInList;
     }
 
     public void setLocationInList(int locationInList) {
         this.locationInList = locationInList;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
     }
 
     public String getCategory() {
@@ -90,4 +92,24 @@ public class Song {
         return title;
     }
 
+    /*
+    Converts songs seconds to minutes and seconds and outputs a string
+     */
+    public String getPlaytimeString() {
+        String minutesString;
+        String secondString;
+        int minutes = playtime / 60;
+        if (minutes < 10) {
+            minutesString = "0" + minutes;
+        } else {
+            minutesString = "" + minutes;
+        }
+        int seconds = playtime % 60;
+        if (10 > seconds) {
+            secondString = "0" + seconds;
+        } else {
+            secondString = "" + seconds;
+        }
+        return minutesString + ":" + secondString;
+    }
 }

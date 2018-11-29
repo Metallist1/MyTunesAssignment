@@ -17,11 +17,13 @@ public class SongFilter {
 
     private ObservableList<Song> temp = FXCollections.observableArrayList();
 
+    /*
+    Searches trough all song titles and gets all items that start with specifies string
+     */
     public ObservableList<Song> search(ObservableList<Song> items, String text) {
         temp.clear();
         for (Song item : items) {
             if (item.getTitle().toLowerCase().startsWith(text.toLowerCase())) {
-                System.out.println(item);
                 temp.add(item);
             }
         }

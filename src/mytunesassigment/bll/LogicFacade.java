@@ -14,31 +14,66 @@ import mytunesassigment.be.Song;
  *
  * @author nedas
  */
-
 public interface LogicFacade {
 
+    /*
+    Gets a list of all playlists
+     */
     public List<Playlist> getAllPlaylists();
 
-    public void deletePlaylist(Playlist play);
-
-    public List<Song> getAllSongs();
-
-    public Song createSong(String title, String artist, String category, int playtime, String location);
-
-    public void deleteSong(Song songToDelete);
-
+    /*
+    Creates a playlist
+     */
     public Playlist createPlaylist(String name);
 
-    public Song addToPlaylist(Playlist playlist, Song song);
-
-    public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong);
-
+    /*
+    Edits the playlist with new name
+     */
     public void editPlaylist(Playlist get, String text);
 
+    /*
+    Deletes specified playlist
+     */
+    public void deletePlaylist(Playlist play);
+
+    /*
+    Gets a list of all songs
+     */
+    public List<Song> getAllSongs();
+
+    /*
+    Creates a song with given parameters
+     */
+    public Song createSong(String title, String artist, String category, int playtime, String location);
+
+    /*
+    Updates song with given parameters
+     */
     public Song updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location);
 
+    /*
+    Deletes specified song
+     */
+    public void deleteSong(Song songToDelete);
+
+    /*
+    Adds specified song to specified playlist
+     */
+    public Song addToPlaylist(Playlist playlist, Song song);
+
+    /*
+    Removes song from specified playlist
+     */
+    public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong);
+
+    /*
+    Edits song position in playlist list
+     */
     public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith);
 
+    /*
+    Searches for all songs that matches the given query 
+     */
     public ObservableList<Song> search(ObservableList<Song> items, String text);
 
 }

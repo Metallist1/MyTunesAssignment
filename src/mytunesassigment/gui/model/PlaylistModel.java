@@ -21,38 +21,62 @@ public class PlaylistModel {
 
     private ObservableList<Playlist> allPlaylists;
 
-    private LogicFacade logiclayer;
+    private final LogicFacade logiclayer;
 
+    /*
+    Initialises the constructor and the logic layer
+    */
     public PlaylistModel() throws IOException {
         logiclayer = new Manager();
     }
 
+    /*
+    Gets all playlists
+    */
     public ObservableList<Playlist> getPlaylists() {
         allPlaylists = FXCollections.observableArrayList();
         allPlaylists.addAll(logiclayer.getAllPlaylists());
         return allPlaylists;
     }
 
+    /*
+    Sents name to create the playlist
+    */
     public void createPlaylist(String name) {
-        Playlist playList = logiclayer.createPlaylist(name);
+        logiclayer.createPlaylist(name);
     }
 
+    /*
+    Deletes the specified playlist
+    */
     public void deletePlaylist(Playlist play) {
         logiclayer.deletePlaylist(play);
     }
 
-    public void editPlaylist(Playlist get, String text) {
-        logiclayer.editPlaylist(get, text);
+    /*
+    Edits the playlist with inserted name
+    */
+    public void editPlaylist(Playlist play, String name) {
+        logiclayer.editPlaylist(play, name);
     }
 
-    public Song addToPlaylist(Playlist get, Song get0) {
-        return logiclayer.addToPlaylist(get, get0);
+    /*
+    Adds song to playlist
+    */
+    public Song addToPlaylist(Playlist play, Song song) {
+        return logiclayer.addToPlaylist(play, song);
     }
 
+    /*
+    Removes song from playlist
+    */
     public void removeSongFromPlaylist(Playlist selectedItem, Song selectedSong) {
         logiclayer.removeSongFromPlaylist(selectedItem, selectedSong);
     }
 
+    /*
+    Modifies the songs position in the playlist
+    */
     public void editSongPosition(Playlist selectedItem, Song selected, Song exhangeWith) {
         logiclayer.editSongPosition(selectedItem, selected, exhangeWith);
     }

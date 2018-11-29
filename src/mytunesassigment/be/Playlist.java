@@ -13,15 +13,17 @@ import java.util.List;
  */
 public class Playlist {
 
-    private List<Song> songList;
-    private int songCount;
-    private int totalTime;
-    private String name;
-    private final int ID;
+    private List<Song> songList; //List of songs in the playlist
+    private int songCount; // Total count of songs in the playlist
+    private int totalTime; // Total time of all songs in the playlist
+    private final String totalTimeString; // Total time but in an hour:minute:second format as a string
+    private String name; // Name of playlist
+    private final int ID; // Unique playlist ID
 
     public Playlist(int songCount, int totalTime, String name, int ID) {
         this.songCount = songCount;
         this.totalTime = totalTime;
+        totalTimeString = getTotalTimeString();
         this.name = name;
         this.ID = ID;
     }
@@ -67,4 +69,25 @@ public class Playlist {
         return " Name=" + name + "Total song count =" + songCount + ", Total play Time=" + totalTime;
     }
 
+    /*
+    Converts seconds to hours, minute and seconds and puts it as a string
+     */
+    public String getTotalTimeString() {
+        String minutesString;
+        String secondString;
+        int hours = totalTime / 3600;
+        int minutes = (totalTime % 3600) / 60;
+        if (minutes < 10) {
+            minutesString = "0" + minutes;
+        } else {
+            minutesString = "" + minutes;
+        }
+        int seconds = totalTime % 60;
+        if (10 > seconds) {
+            secondString = "0" + seconds;
+        } else {
+            secondString = "" + seconds;
+        }
+        return hours + ":" + minutesString + ":" + secondString;
+    }
 }

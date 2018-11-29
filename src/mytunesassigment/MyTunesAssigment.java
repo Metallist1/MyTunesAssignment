@@ -16,7 +16,10 @@ import javafx.stage.Stage;
  * @author nedas
  */
 public class MyTunesAssigment extends Application {
-    
+
+    /*
+    Initialises main window
+     */
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/mytunesassigment/gui/view/MainWindowView.fxml"));
@@ -31,5 +34,5 @@ public class MyTunesAssigment extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

@@ -22,31 +22,47 @@ public class SongModel {
 
     private final LogicFacade logiclayer;
 
+    /*
+    Initialises the constructor and the logic layer
+    */
     public SongModel() throws IOException {
         logiclayer = (LogicFacade) new Manager();
     }
 
+    /*
+    Gets all existing songs
+    */
     public ObservableList<Song> getSongs() {
         allSongs = FXCollections.observableArrayList();
         allSongs.addAll(logiclayer.getAllSongs());
         return allSongs;
     }
 
+    /*
+    Creates new song with specifics given
+    */
     public void createSong(String title, String artist, String category, int playtime, String location) {
         logiclayer.createSong(title, artist, category, playtime, location);
     }
 
+    /*
+    Deletes specified song
+    */
     public void deleteSong(Song songToDelete) {
         logiclayer.deleteSong(songToDelete);
     }
 
+    /*
+    Updates specified song with given values
+    */
     public void updateSong(Song songToDelete, String title, String artist, String category, int playtime, String location) {
-        allSongs.remove(songToDelete);
-        Song newSong = logiclayer.updateSong(songToDelete, title, artist, category, playtime, location);
-        allSongs.add(newSong);
+        logiclayer.updateSong(songToDelete, title, artist, category, playtime, location);
     }
 
-    public ObservableList<Song> search(ObservableList<Song> items, String text) {
-        return logiclayer.search(items, text);
+    /*
+    Searches for all songs with specific query
+    */
+    public ObservableList<Song> search(ObservableList<Song> items, String query) {
+        return logiclayer.search(items, query);
     }
 }

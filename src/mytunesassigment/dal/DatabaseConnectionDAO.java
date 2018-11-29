@@ -16,16 +16,17 @@ import java.util.List;
  *
  * @author nedas
  */
-
 public class DatabaseConnectionDAO {
-    
-        public List<String> getDatabaseInfo() throws IOException {
+
+    /*
+    Gets database information from file. Adds it to an array to be sent to all DAO classes so database connection could be easily possible 
+     */
+    public List<String> getDatabaseInfo() throws IOException {
         List<String> info = new ArrayList();
         String source = "data/loginDetails.txt";
         File file = new File(source);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
-        {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.isEmpty()) {

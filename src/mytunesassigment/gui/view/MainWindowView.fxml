@@ -23,12 +23,12 @@
                   <Button mnemonicParsing="false" onAction="#skipSongForward" text="Front" />
                </children>
             </HBox>
-            <Slider fx:id="volumeSlider" blockIncrement="1.0" onMouseReleased="#setSound" prefHeight="38.0" prefWidth="166.0" showTickLabels="true" showTickMarks="true" value="50.0" />
+            <Slider fx:id="volumeSlider" blockIncrement="1.0" majorTickUnit="0.25" max="1.0" onMouseReleased="#setSound" prefHeight="38.0" prefWidth="166.0" showTickLabels="true" showTickMarks="true" value="0.5" />
          </children>
       </VBox>
       <HBox layoutX="545.0" layoutY="26.0" prefHeight="32.0" prefWidth="270.0">
          <children>
-            <TextField fx:id="searchTextBox" onKeyPressed="#search" />
+            <TextField fx:id="searchTextBox" onKeyReleased="#search" />
          </children>
       </HBox>
       <HBox layoutX="13.0" layoutY="75.0" prefHeight="322.0" prefWidth="818.0">
@@ -45,9 +45,9 @@
                   </TableView>
                   <HBox prefHeight="38.0" prefWidth="124.0">
                      <children>
-                        <Button fx:id="playlistCreateButton" mnemonicParsing="false" onAction="#createPlaylist" text="New" />
-                        <Button fx:id="playlistEditButton" mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
-                        <Button fx:id="playlistDeleteButton" mnemonicParsing="false" onAction="#deletePlaylist" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#createPlaylist" text="New" />
+                        <Button mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
+                        <Button mnemonicParsing="false" onAction="#deletePlaylist" text="Delete" />
                      </children>
                   </HBox>
                </children>
@@ -96,9 +96,9 @@
                      <children>
                         <HBox prefHeight="34.0" prefWidth="185.0">
                            <children>
-                              <Button fx:id="songCreateButton" mnemonicParsing="false" onAction="#createSong" text="New" />
-                              <Button fx:id="songEditButton" mnemonicParsing="false" onAction="#editSong" text="Edit" />
-                              <Button fx:id="songDeleteButton" mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
+                              <Button mnemonicParsing="false" onAction="#createSong" text="New" />
+                              <Button mnemonicParsing="false" onAction="#editSong" text="Edit" />
+                              <Button mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
                            </children>
                         </HBox>
                      </children>
