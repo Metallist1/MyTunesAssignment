@@ -137,7 +137,7 @@ public class PlaylistController implements Initializable {
             play(); //Plays the song
         } else { //otherwise stops the media player and sets the mediaPlayer object to null
             currentSong.setText("(none) is now playing");
-            playButton.setText("Play");
+            playButton.setText("⏵");
             stopMediaPlayer();
             mediaPlayer = null;
         }
@@ -180,7 +180,7 @@ public class PlaylistController implements Initializable {
     Plays the media file by getting its location from the selected element list
      */
     private void play() {
-        playButton.setText("Pause");
+        playButton.setText("||");
         mediaPlayer = new MediaPlayer(new Media(new File(songsInPlaylist.getItems().get(currentSongPlaying).getLocation()).toURI().toString()));
         songsInPlaylist.getSelectionModel().clearAndSelect(currentSongPlaying);
         currentSong.setText(songsInPlaylist.getItems().get(currentSongPlaying).getTitle() + " is now playing");
@@ -266,7 +266,7 @@ public class PlaylistController implements Initializable {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             currentSong.setText("(none) is playing");
-            playButton.setText("Play");
+            playButton.setText("⏵");
             mediaPlayer = null;
         }
     }
@@ -431,7 +431,12 @@ public class PlaylistController implements Initializable {
             songToModify.setIDinsideList(songsInPlaylist.getItems().size() + 1); //Modifies visual ID . Sets it to the highest possible in the list
             songsInPlaylist.getItems().add(songToModify);
         } else { //Else removes the song from the list
+           int tomodify = songsInPlaylist.getSelectionModel().getSelectedItem().getIDinsideList(); // Gets ID which will be removed in the list
+            for (int z = tomodify ; z<songsInPlaylist.getItems().size() ; z ++){ //Modifies the rest of the playlist songs IDs in the list to reflect changes. Modifies it from the selected items ID
+                songsInPlaylist.getItems().get(z).setIDinsideList(z);
+            } 
             songsInPlaylist.getItems().remove(songToModifyIndex);
+
         }
     }
 }

@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import mytunesassigment.be.Playlist;
 import mytunesassigment.be.Song;
 import mytunesassigment.bll.util.SongFilter;
+import mytunesassigment.dal.CategoriesDAO;
 import mytunesassigment.dal.PlaylistDAO;
 import mytunesassigment.dal.PlaylistSongDAO;
 import mytunesassigment.dal.SongDAO;
@@ -25,15 +26,17 @@ public class Manager implements LogicFacade {
     private final SongDAO songDAO;
     private final SongFilter songSearcher;
     private final PlaylistSongDAO PlaylistSongInfo;
+    private final CategoriesDAO categoriesDAO;
 
     /*
     Initialises all classes in DAL
-    */
+     */
     public Manager() throws IOException {
         playListDAO = new PlaylistDAO();
         songDAO = new SongDAO();
         songSearcher = new SongFilter();
-        PlaylistSongInfo= new PlaylistSongDAO();
+        PlaylistSongInfo = new PlaylistSongDAO();
+        categoriesDAO = new CategoriesDAO();
     }
 
     @Override
@@ -96,6 +99,21 @@ public class Manager implements LogicFacade {
     @Override
     public ObservableList<Song> search(ObservableList<Song> items, String text) {
         return songSearcher.search(items, text);
+    }
+
+    @Override
+    public List<String> getAllCategories() {
+        return categoriesDAO.getAllCategories();
+    }
+
+    @Override
+    public void createCategory(String name) {
+        categoriesDAO.createCategory(name);
+    }
+
+    @Override
+    public void deleteCategory(String name) {
+        categoriesDAO.deleteCategory(name);
     }
 
 }

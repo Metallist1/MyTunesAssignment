@@ -1,5 +1,5 @@
-DatabaseName
+Database Name
 Username
 Password
 Port
-ID
+IP

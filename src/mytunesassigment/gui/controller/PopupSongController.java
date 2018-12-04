@@ -9,19 +9,26 @@ import java.io.File;
 import java.io.IOException;
 import static java.lang.Math.toIntExact;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import mytunesassigment.be.Song;
+import mytunesassigment.gui.model.CategoryModel;
 import mytunesassigment.gui.model.SongModel;
 
 /**
@@ -48,6 +55,7 @@ public class PopupSongController implements Initializable {
 
     private boolean isEditing = false;
     private SongModel songModel;
+    private CategoryModel categoryModel;
     private MediaPlayer mediaPlayer;
     private Song songToEdit;
     PlaylistController controller1;
@@ -58,15 +66,13 @@ public class PopupSongController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        categoryChoice.getItems().add("Pop");
-        categoryChoice.getItems().add("Electro");
-        categoryChoice.getItems().add("Rock");
-        categoryChoice.getItems().add("Techno");
-        categoryChoice.getItems().add("Jazz");
-        categoryChoice.getItems().add("Metal");
-
-        try { //Initialises the song Modal
+        try { //Initialises the song Modal and category modal
             songModel = new SongModel();
+            categoryModel = new CategoryModel();
+            List<String> allcategories = categoryModel.getAllCategories(); //Gets all categories
+            for (String allcategory : allcategories) { //Adds all categories to choice box
+                categoryChoice.getItems().add(allcategory);
+            }
         } catch (IOException ex) {
             errorLabel.setText("Error: Cannot load song database");
         }
@@ -77,17 +83,18 @@ public class PopupSongController implements Initializable {
      */
     @FXML
     private void chooseURL(ActionEvent event) {
-        JFileChooser chooser = new JFileChooser(); // Initialises Chooser
-        chooser.setCurrentDirectory(new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Desktop")); //Sets the directory to the desktop
-        chooser.setDialogTitle("Select song "); //Specifies the objective of the user
-        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // Allows both file and directory navigation
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "MP3 and Wav files", "mp3", ".wav"); // Specifies what files should be only displayed
-        chooser.setFileFilter(filter); //sets the filter 
-        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // If the user chooses the file. Get its path and song time.
-            urlField.setText(chooser.getSelectedFile().getAbsolutePath());
-            mediaPlayer = new MediaPlayer(new Media(new File(chooser.getSelectedFile().getAbsolutePath()).toURI().toString())); // Sets up the media object in order to get time of the song
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Desktop")); //Sets the directory to the desktop
+        fileChooser.setTitle("Select song");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+                new ExtensionFilter("All Files", "*.*"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            urlField.setText(selectedFile.getAbsolutePath());
+            mediaPlayer = new MediaPlayer(new Media(new File(selectedFile.getAbsolutePath()).toURI().toString())); // Sets up the media object in order to get time of the song
             setMediaPlayerTime(); // Gets time of the song
+
         }
     }
 
@@ -167,6 +174,26 @@ public class PopupSongController implements Initializable {
             specificFunctionLabel.setText("Editing song");
         } else {
             specificFunctionLabel.setText("Create song");
+        }
+    }
+
+    @FXML
+    private void createCategory(ActionEvent event) throws IOException {
+        Parent root1;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mytunesassigment/gui/view/popupCategory.fxml"));
+        root1 = (Parent) fxmlLoader.load();
+        fxmlLoader.<PopupCategoryController>getController().setController(this); //Sets controler by default for both creating and editing playlists
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1, 800, 800));
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    void updateCategory(String name, boolean isAdding) {
+        if (isAdding) {
+            categoryChoice.getItems().add(name); //adds the name to current category box
+        } else {
+            categoryChoice.getItems().remove(name); //removes the name from current category box
         }
     }
 

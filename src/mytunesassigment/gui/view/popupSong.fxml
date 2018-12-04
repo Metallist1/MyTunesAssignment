@@ -23,5 +23,6 @@
       <Label layoutX="118.0" layoutY="221.0" text="Time :" />
       <Label layoutX="118.0" layoutY="255.0" text="Url : " />
       <Label fx:id="errorLabel" layoutX="120.0" layoutY="56.0" />
+      <Button layoutX="373.0" layoutY="175.0" mnemonicParsing="false" onAction="#createCategory" text="More..." />
    </children>
 </AnchorPane>

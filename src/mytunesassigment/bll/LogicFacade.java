@@ -76,4 +76,19 @@ public interface LogicFacade {
      */
     public ObservableList<Song> search(ObservableList<Song> items, String text);
 
+    /*
+    Gets all categories
+     */
+    public List<String> getAllCategories();
+
+    /*
+    Creates a new category
+     */
+    public void createCategory(String name);
+
+    /*
+    Deletes specified category
+     */
+    public void deleteCategory(String name);
+
 }

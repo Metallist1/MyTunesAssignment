@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mytunesassigment.gui.controller.PopupCategoryController">
+   <children>
+      <Label fx:id="specificFunctionLabel" layoutX="235.0" layoutY="14.0" text="Create / Delete Category" />
+      <TextField fx:id="nameField" layoutX="202.0" layoutY="99.0" promptText="Insert Name" />
+      <ChoiceBox fx:id="categoryChoice" layoutX="201.0" layoutY="140.0" prefWidth="150.0" />
+      <Button layoutX="422.0" layoutY="238.0" mnemonicParsing="false" onAction="#goBack" text="Cancel" />
+      <Button layoutX="422.0" layoutY="99.0" mnemonicParsing="false" onAction="#createCategory" text="Create" />
+      <Label layoutX="118.0" layoutY="102.0" text="Name :" />
+      <Label layoutX="109.0" layoutY="144.0" text="Category :" />
+      <Label fx:id="errorLabel" layoutX="120.0" layoutY="56.0" />
+      <Button layoutX="422.0" layoutY="141.0" mnemonicParsing="false" onAction="#deleteCategory" text="Delete" />
+   </children>
+</AnchorPane>

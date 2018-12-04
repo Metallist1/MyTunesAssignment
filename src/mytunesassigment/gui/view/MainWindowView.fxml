@@ -18,12 +18,21 @@
          <children>
             <HBox prefHeight="38.0" prefWidth="158.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#SkipSongBackward" text="Back" />
-                  <Button fx:id="playButton" mnemonicParsing="false" onAction="#playSong" text="Play" />
-                  <Button mnemonicParsing="false" onAction="#skipSongForward" text="Front" />
+                  <Button mnemonicParsing="false" onAction="#SkipSongBackward" text="⏮">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin></Button>
+                  <Button fx:id="playButton" mnemonicParsing="false" onAction="#playSong" text="⏵">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" onAction="#skipSongForward" text="⏭">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
-            <Slider fx:id="volumeSlider" blockIncrement="1.0" majorTickUnit="0.25" max="1.0" onMouseReleased="#setSound" prefHeight="38.0" prefWidth="166.0" showTickLabels="true" showTickMarks="true" value="0.5" />
+            <Slider fx:id="volumeSlider" blockIncrement="1.0" majorTickUnit="0.25" max="1.0" onMouseReleased="#setSound" prefHeight="38.0" prefWidth="166.0" showTickMarks="true" value="0.5" />
          </children>
       </VBox>
       <HBox layoutX="545.0" layoutY="26.0" prefHeight="32.0" prefWidth="270.0">
@@ -45,9 +54,18 @@
                   </TableView>
                   <HBox prefHeight="38.0" prefWidth="124.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#createPlaylist" text="New" />
-                        <Button mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
-                        <Button mnemonicParsing="false" onAction="#deletePlaylist" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#createPlaylist" text="New">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin></Button>
+                        <Button mnemonicParsing="false" onAction="#editPlaylist" text="Edit">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin></Button>
+                        <Button mnemonicParsing="false" onAction="#deletePlaylist" text="Delete">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin></Button>
                      </children>
                   </HBox>
                </children>
@@ -55,7 +73,7 @@
                   <Insets right="30.0" />
                </HBox.margin>
             </VBox>
-            <VBox prefHeight="322.0" prefWidth="146.0">
+            <VBox prefHeight="322.0" prefWidth="184.0">
                <children>
                   <Label text="Songs in playlist" />
                   <TableView fx:id="songsInPlaylist" prefHeight="303.0" prefWidth="146.0">
@@ -66,9 +84,18 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#moveSongDown" text="/\" />
-                        <Button mnemonicParsing="false" onAction="#moveSongUp" text="\\/" />
-                        <Button mnemonicParsing="false" onAction="#removeSong" text="Remove" />
+                        <Button mnemonicParsing="false" onAction="#moveSongDown" text="/\">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin></Button>
+                        <Button mnemonicParsing="false" onAction="#moveSongUp" text="\\/">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin></Button>
+                        <Button mnemonicParsing="false" onAction="#removeSong" text="Remove">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin></Button>
                      </children>
                   </HBox>
                </children>
@@ -94,11 +121,20 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <HBox prefHeight="34.0" prefWidth="185.0">
+                        <HBox prefHeight="66.0" prefWidth="321.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#createSong" text="New" />
-                              <Button mnemonicParsing="false" onAction="#editSong" text="Edit" />
-                              <Button mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
+                              <Button mnemonicParsing="false" onAction="#createSong" text="New">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin></Button>
+                              <Button mnemonicParsing="false" onAction="#editSong" text="Edit">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin></Button>
+                              <Button mnemonicParsing="false" onAction="#deleteSong" text="Delete">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin></Button>
                            </children>
                         </HBox>
                      </children>

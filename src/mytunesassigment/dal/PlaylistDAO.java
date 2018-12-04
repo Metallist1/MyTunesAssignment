@@ -111,7 +111,6 @@ public class PlaylistDAO {
             while (rs.next()) {
                 newestID = rs.getInt("id");
             }
-            System.out.println(newestID);
             return newestID;
         } catch (SQLServerException ex) {
             System.out.println(ex);
