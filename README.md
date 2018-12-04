@@ -9,7 +9,7 @@ Database tables, the whole programs structure and coding was made from scrach in
 
 
 
-This project has most features found in media players. This includes :
+**This project has most features found in media players. **
 
 The ability to add , remove and modify playlists and the songs stored inside them.
 
